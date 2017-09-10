@@ -6,12 +6,39 @@ import "./styles.css";
 class TrackingMap extends Component {
   constructor() {
     super();
-    this.state = { starkvilleLatLng: L.latLng(33.4504, -88.8184) };
+    const starkvilleLatLng = L.latLng(33.4504, -88.8184);
+    this.state = { points: [], startingLatLng: starkvilleLatLng };
+
+    this.map = {};
+    this.popup = L.popup();
+
+    this.addCircle = this.addCircle.bind(this);
+    this.addMarker = this.addMarker.bind(this);
     this.initMap = this.initMap.bind(this);
+    this.printCoordOnClick = this.printCoordOnClick.bind(this);
+    this.onMapClick = this.onMapClick.bind(this);
+    this.updatePoints = this.updatePoints.bind(this);
+  }
+
+  componentDidMount() {
+    this.initMap(this.state.startingLatLng);
+  }
+
+  addCircle(latLng) {
+    var circle = L.circle(latLng, {
+      color: "red",
+      fillColor: "#f03",
+      fillOpacity: 0.5,
+      radius: 500
+    }).addTo(this.map);
+  }
+
+  addMarker(latLng) {
+    var marker = L.marker(latLng).addTo(this.map);
   }
 
   initMap(latLng) {
-    var mymap = L.map("mapid").setView(latLng, 13);
+    this.map = L.map("mapid").setView(latLng, 13);
     L.tileLayer(
       "https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiYnJvYWJlY3QiLCJhIjoiY2o3ZjJvenhxMHQydzJ2cGpuanZzdHM1eSJ9.1x2hxYs_gU-cmBaiu-qXVg",
       {
@@ -22,11 +49,29 @@ class TrackingMap extends Component {
         accessToken:
           "pk.eyJ1IjoiYnJvYWJlY3QiLCJhIjoiY2o3ZjJvenhxMHQydzJ2cGpuanZzdHM1eSJ9.1x2hxYs_gU-cmBaiu-qXVg"
       }
-    ).addTo(mymap);
+    ).addTo(this.map);
+
+    //Adding Click listener
+    this.map.on("click", this.onMapClick);
   }
 
-  componentDidMount() {
-    this.initMap(this.state.starkvilleLatLng);
+  onMapClick(e) {
+    this.addCircle(e.latlng);
+    this.updatePoints(e.latlng);
+  }
+
+  printCoordOnClick(latLng) {
+    this.popup
+      .setLatLng(latLng)
+      .setContent("You clicked the map at " + latLng.toString())
+      .openOn(this.map);
+  }
+
+  updatePoints(latLng) {
+    const currentPoints = this.state.points;
+    currentPoints.push(latLng);
+
+    this.setState({ points: currentPoints });
   }
 
   render() {
