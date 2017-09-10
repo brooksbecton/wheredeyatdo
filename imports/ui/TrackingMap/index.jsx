@@ -29,7 +29,7 @@ class TrackingMap extends Component {
       color: "red",
       fillColor: "#f03",
       fillOpacity: 0.5,
-      radius: 500
+      radius: 125
     }).addTo(this.map);
   }
 
@@ -56,6 +56,7 @@ class TrackingMap extends Component {
   }
 
   onMapClick(e) {
+    Meteor.call("geopoints.insert", e.latlng);
     this.addCircle(e.latlng);
     this.updatePoints(e.latlng);
   }

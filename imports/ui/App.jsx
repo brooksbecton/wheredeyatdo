@@ -14,7 +14,6 @@ class App extends Component {
       <div>
         <h1>Where Dey At!?</h1>
         <AccountsUIWrapper />
-        <GeoInput />
         <h2>Geopoint List</h2>
         <GeopointList geopoints={this.props.geopoints} />
         <h2>Tracking Map</h2>
@@ -29,6 +28,8 @@ App.prototypes = {
 };
 
 export default createContainer(() => {
+  Meteor.subscribe("geopoints");
+
   return {
     geopoints: GeoPoints.find({}).fetch()
   };
