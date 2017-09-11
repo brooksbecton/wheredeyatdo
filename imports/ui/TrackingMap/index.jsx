@@ -16,6 +16,7 @@ class TrackingMap extends Component {
     this.addMarker = this.addMarker.bind(this);
     this.initMap = this.initMap.bind(this);
     this.printCoordOnClick = this.printCoordOnClick.bind(this);
+    this.onLocationFound = this.onLocationFound.bind(this);
     this.onMapClick = this.onMapClick.bind(this);
     this.updatePoints = this.updatePoints.bind(this);
   }
@@ -39,6 +40,8 @@ class TrackingMap extends Component {
 
   initMap(latLng) {
     this.map = L.map("mapid").setView(latLng, 13);
+    this.map.locate({ setView: true, maxZoom: 16 });
+
     L.tileLayer(
       "https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiYnJvYWJlY3QiLCJhIjoiY2o3ZjJvenhxMHQydzJ2cGpuanZzdHM1eSJ9.1x2hxYs_gU-cmBaiu-qXVg",
       {
@@ -51,8 +54,20 @@ class TrackingMap extends Component {
       }
     ).addTo(this.map);
 
-    //Adding Click listener
+    //Adding listeners
     this.map.on("click", this.onMapClick);
+    this.map.on("locationfound", this.onLocationFound);
+  }
+
+  onLocationFound(e) {
+    const radius = e.accuracy / 2;
+
+    L.marker(e.latlng)
+      .addTo(this.map)
+      .bindPopup("You are within " + radius + " meters from this point")
+      .openPopup();
+
+    L.circle(e.latlng, radius).addTo(this.map);
   }
 
   onMapClick(e) {
