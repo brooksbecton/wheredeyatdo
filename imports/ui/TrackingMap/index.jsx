@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import PropTypes from "proptypes";
 import "leaflet";
 
 import "./styles.css";
@@ -25,6 +26,15 @@ class TrackingMap extends Component {
     this.initMap(this.state.startingLatLng);
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.geopoints != prevProps.geopoints) {
+      this.props.geopoints.map(p => {
+        const newMarkerLatLng = L.LatLng(p.lat, p.lng);
+        this.addMarker({ lat: p.lat, lng: p.lng });
+      });
+    }
+  }
+
   addCircle(latLng) {
     var circle = L.circle(latLng, {
       color: "red",
@@ -35,12 +45,12 @@ class TrackingMap extends Component {
   }
 
   addMarker(latLng) {
-    var marker = L.marker(latLng).addTo(this.map);
+    L.marker(latLng).addTo(this.map);
   }
 
   initMap(latLng) {
     this.map = L.map("mapid").setView(latLng, 13);
-    this.map.locate({ setView: true, maxZoom: 16 });
+    this.map.locate({ setView: true, maxZoom: 12 });
 
     L.tileLayer(
       "https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiYnJvYWJlY3QiLCJhIjoiY2o3ZjJvenhxMHQydzJ2cGpuanZzdHM1eSJ9.1x2hxYs_gU-cmBaiu-qXVg",
@@ -72,7 +82,7 @@ class TrackingMap extends Component {
 
   onMapClick(e) {
     Meteor.call("geopoints.insert", e.latlng);
-    this.addCircle(e.latlng);
+    this.addMarker(e.latlng);
     this.updatePoints(e.latlng);
   }
 
@@ -94,5 +104,9 @@ class TrackingMap extends Component {
     return <div id="mapid" />;
   }
 }
+
+TrackingMap.prototypes = {
+  geopoints: PropTypes.array
+};
 
 export default TrackingMap;

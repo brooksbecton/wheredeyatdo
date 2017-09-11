@@ -17,7 +17,7 @@ class App extends Component {
         <h2>Geopoint List</h2>
         <GeopointList geopoints={this.props.geopoints} />
         <h2>Tracking Map</h2>
-        <TrackingMap />
+        <TrackingMap geopoints={this.props.geopoints} />
       </div>
     );
   }
