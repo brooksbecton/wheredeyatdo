@@ -11,10 +11,12 @@ class TrackingMap extends Component {
     this.state = { points: [], startingLatLng: starkvilleLatLng };
 
     this.map = {};
+    this.markerGroup = {};
     this.popup = L.popup();
 
     this.addCircle = this.addCircle.bind(this);
     this.addMarker = this.addMarker.bind(this);
+    this.drawMarkers = this.drawMarkers.bind(this);
     this.initMap = this.initMap.bind(this);
     this.printCoordOnClick = this.printCoordOnClick.bind(this);
     this.onLocationFound = this.onLocationFound.bind(this);
@@ -28,10 +30,7 @@ class TrackingMap extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (this.props.geopoints != prevProps.geopoints) {
-      this.props.geopoints.map(p => {
-        const newMarkerLatLng = L.LatLng(p.lat, p.lng);
-        this.addMarker({ lat: p.lat, lng: p.lng });
-      });
+      this.drawMarkers(this.props.geopoints);
     }
   }
 
@@ -45,12 +44,24 @@ class TrackingMap extends Component {
   }
 
   addMarker(latLng) {
-    L.marker(latLng).addTo(this.map);
+    L.marker(latLng).addTo(this.markerGroup);
+  }
+
+  drawMarkers(geopoints) {
+    //Clearing all geopoints
+    this.markerGroup.clearLayers();
+
+    //Re drawing new geopoints
+    geopoints.map(p => {
+      const newMarkerLatLng = L.LatLng(p.lat, p.lng);
+      this.addMarker({ lat: p.lat, lng: p.lng });
+    });
   }
 
   initMap(latLng) {
     this.map = L.map("mapid").setView(latLng, 13);
     this.map.locate({ setView: true, maxZoom: 12 });
+    this.markerGroup = L.layerGroup().addTo(this.map);
 
     L.tileLayer(
       "https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiYnJvYWJlY3QiLCJhIjoiY2o3ZjJvenhxMHQydzJ2cGpuanZzdHM1eSJ9.1x2hxYs_gU-cmBaiu-qXVg",

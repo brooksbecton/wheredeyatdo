@@ -14,10 +14,10 @@ class App extends Component {
       <div>
         <h1>Where Dey At!?</h1>
         <AccountsUIWrapper />
-        <h2>Geopoint List</h2>
-        <GeopointList geopoints={this.props.geopoints} />
         <h2>Tracking Map</h2>
         <TrackingMap geopoints={this.props.geopoints} />
+        <h2>Geopoint List</h2>
+        <GeopointList geopoints={this.props.geopoints} />
       </div>
     );
   }
