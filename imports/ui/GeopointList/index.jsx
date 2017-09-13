@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import PropTypes from "proptypes";
 
+import { isBusAccount } from "./../../app/auth";
+
 class GeopointList extends Component {
   constructor() {
     super();
@@ -19,7 +21,10 @@ class GeopointList extends Component {
           return (
             <li key={geopoint["_id"]}>
               {geopoint.lat + ", " + geopoint.lng}
-              <button onClick={() => this.handleDelete(geopoint["_id"])}>
+              <button
+                disabled={!isBusAccount()}
+                onClick={() => this.handleDelete(geopoint["_id"])}
+              >
                 delete
               </button>
             </li>

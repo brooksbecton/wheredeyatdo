@@ -1,8 +1,21 @@
 import { check } from "meteor/check";
 import { Meteor } from "meteor/meteor";
 import { Mongo } from "meteor/mongo";
-
+import { isBusAccount } from "./../app/auth";
 export const GeoPoints = new Mongo.Collection("geopoints");
+
+// Deny all client-side updates on the Lists collection
+GeoPoints.allow({
+  insert() {
+    return isBusAccount();
+  },
+  update() {
+    return isBusAccount();
+  },
+  remove() {
+    return isBusAccount();
+  }
+});
 
 if (Meteor.isServer) {
   // This code only runs on the server

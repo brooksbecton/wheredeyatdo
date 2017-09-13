@@ -1,7 +1,8 @@
+import "leaflet";
 import React, { Component } from "react";
 import PropTypes from "proptypes";
-import "leaflet";
 
+import { isBusAccount } from "./../../app/auth";
 import "./styles.css";
 
 class TrackingMap extends Component {
@@ -92,9 +93,11 @@ class TrackingMap extends Component {
   }
 
   onMapClick(e) {
-    Meteor.call("geopoints.insert", e.latlng);
-    this.addMarker(e.latlng);
-    this.updatePoints(e.latlng);
+    if (isBusAccount()) {
+      Meteor.call("geopoints.insert", e.latlng);
+      this.addMarker(e.latlng);
+      this.updatePoints(e.latlng);
+    }
   }
 
   printCoordOnClick(latLng) {
