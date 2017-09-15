@@ -22,7 +22,6 @@ class TrackingMap extends Component {
     this.printCoordOnClick = this.printCoordOnClick.bind(this);
     this.onLocationFound = this.onLocationFound.bind(this);
     this.onMapClick = this.onMapClick.bind(this);
-    this.updatePoints = this.updatePoints.bind(this);
   }
 
   componentDidMount() {
@@ -34,7 +33,10 @@ class TrackingMap extends Component {
       this.drawMarkers(this.props.geopoints);
     }
   }
-
+  /**
+   * Adds a circle to the map at latLng
+   * @param {Object} latLng 
+   */
   addCircle(latLng) {
     var circle = L.circle(latLng, {
       color: "red",
@@ -44,10 +46,18 @@ class TrackingMap extends Component {
     }).addTo(this.map);
   }
 
+  /**
+   * Adds a marker to map at latLng
+   * @param {Object} latLng 
+   */
   addMarker(latLng) {
     L.marker(latLng).addTo(this.markerGroup);
   }
 
+  /**
+   * Draws each point in map from array
+   * @param {Array<latLng>} geopoints 
+   */
   drawMarkers(geopoints) {
     //Clearing all geopoints
     this.markerGroup.clearLayers();
@@ -59,11 +69,21 @@ class TrackingMap extends Component {
     });
   }
 
+  /**
+   * 
+   * @param {Object} latLng 
+   */
   initMap(latLng) {
+    //Gets map reference
     this.map = L.map("mapid").setView(latLng, 13);
+
+    //Gets users current position
     this.map.locate({ setView: true, maxZoom: 12 });
+
+    //Gets marker group reference
     this.markerGroup = L.layerGroup().addTo(this.map);
 
+    //Gets & Draws backdrop to map
     L.tileLayer(
       "https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiYnJvYWJlY3QiLCJhIjoiY2o3ZjJvenhxMHQydzJ2cGpuanZzdHM1eSJ9.1x2hxYs_gU-cmBaiu-qXVg",
       {
@@ -81,6 +101,10 @@ class TrackingMap extends Component {
     this.map.on("locationfound", this.onLocationFound);
   }
 
+  /**
+   * Adds marker to map when location is found
+   * @param {Object<Event>} e 
+   */
   onLocationFound(e) {
     const radius = e.accuracy / 2;
 
@@ -92,6 +116,10 @@ class TrackingMap extends Component {
     L.circle(e.latlng, radius).addTo(this.map);
   }
 
+  /**
+   * On click, adds marker to map and db
+   * @param {Object<Event>} e 
+   */
   onMapClick(e) {
     if (isBusAccount()) {
       Meteor.call("geopoints.insert", e.latlng);
@@ -100,18 +128,15 @@ class TrackingMap extends Component {
     }
   }
 
+  /**
+   * Prints a pop up when a user clicks on map
+   * @param {Object} latLng 
+   */
   printCoordOnClick(latLng) {
     this.popup
       .setLatLng(latLng)
       .setContent("You clicked the map at " + latLng.toString())
       .openOn(this.map);
-  }
-
-  updatePoints(latLng) {
-    const currentPoints = this.state.points;
-    currentPoints.push(latLng);
-
-    this.setState({ points: currentPoints });
   }
 
   render() {
