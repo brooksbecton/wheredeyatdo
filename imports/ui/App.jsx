@@ -1,22 +1,41 @@
 import PropTypes from "proptypes";
 import React, { Component } from "react";
+import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 import { createContainer } from "meteor/react-meteor-data";
 
 import GeoInput from "./GeoInput/index";
 import GeopointList from "./GeopointList/index";
+import SideNav from "./SideNav/index";
+import TopNav from "./TopNav/index";
 import TrackingMap from "./TrackingMap/index";
-import { GeoPoints } from "./../api/geopoints";
 import AccountsUIWrapper from "./User/AccountsUIWrapper";
-
+import { GeoPoints } from "./../api/geopoints";
 class App extends Component {
+  constructor() {
+    super();
+    this.state = {
+      sideNavOpen: false
+    };
+
+    this.toggleSideNav = this.toggleSideNav.bind(this);
+  }
+
+  toggleSideNav() {
+    this.setState({ sideNavOpen: !this.state.sideNavOpen });
+  }
+
   render() {
     return (
-      <div>
-        <h1>Where Dey At!?</h1>
-        <AccountsUIWrapper />
-        <h2>Tracking Map</h2>
-        <TrackingMap geopoints={this.props.geopoints} />
-      </div>
+      <MuiThemeProvider>
+        <div>
+          <TopNav toggleSideNav={this.toggleSideNav} />
+          <TrackingMap geopoints={this.props.geopoints} />
+          <SideNav
+            open={this.state.sideNavOpen}
+            toggleSideNav={this.toggleSideNav}
+          />
+        </div>
+      </MuiThemeProvider>
     );
   }
 }
