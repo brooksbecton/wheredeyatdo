@@ -16,8 +16,6 @@ class App extends Component {
         <AccountsUIWrapper />
         <h2>Tracking Map</h2>
         <TrackingMap geopoints={this.props.geopoints} />
-        <h2>Geopoint List</h2>
-        <GeopointList geopoints={this.props.geopoints} />
       </div>
     );
   }

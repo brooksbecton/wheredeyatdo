@@ -39,8 +39,7 @@ Meteor.methods({
       createdAt: new Date(),
       lat: geopoint.lat,
       lng: geopoint.lng,
-      owner: Meteor.userId(),
-      username: Meteor.user().username
+      ownerId: Meteor.userId()
     });
   },
   "geopoints.remove"(id) {
