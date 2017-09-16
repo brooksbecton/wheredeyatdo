@@ -127,7 +127,6 @@ class TrackingMap extends Component {
     if (isBusAccount()) {
       Meteor.call("geopoints.insert", e.latlng);
       this.addMarker(e.latlng);
-      this.updatePoints(e.latlng);
     }
   }
 

@@ -10,12 +10,12 @@ const SideNav = ({ open, toggleLoginModal, toggleSideNav }) => {
   return (
     <div>
       <Drawer open={open} onClick={toggleSideNav}>
-        <MenuItem>
-          <Anchor to="/">Home</Anchor>{" "}
-        </MenuItem>
-        <MenuItem>
-          <Anchor to="/geopoints">Points List</Anchor>{" "}
-        </MenuItem>
+        <Anchor to="/">
+          <MenuItem onClick={toggleSideNav}>Home</MenuItem>
+        </Anchor>
+        <Anchor to="/geopoints">
+          <MenuItem onClick={toggleSideNav}>Points List</MenuItem>
+        </Anchor>
         <MenuItem onClick={toggleLoginModal}>Login</MenuItem>
         <MenuItem onClick={toggleSideNav}>Close Nav</MenuItem>
       </Drawer>

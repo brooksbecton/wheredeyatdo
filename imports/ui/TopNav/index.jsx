@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import AppBar from "material-ui/AppBar";
+import styled from "styled-components";
 
 import AccountsUIWrapper from "./../User/AccountsUIWrapper";
 
