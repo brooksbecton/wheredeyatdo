@@ -1,8 +1,11 @@
 import "leaflet";
+import { createContainer } from "meteor/react-meteor-data";
 import React, { Component } from "react";
 import PropTypes from "proptypes";
 
+import { GeoPoints } from "./../../api/geopoints";
 import { isBusAccount } from "./../../app/auth";
+
 import "./styles.css";
 
 class TrackingMap extends Component {
@@ -148,4 +151,10 @@ TrackingMap.prototypes = {
   geopoints: PropTypes.array
 };
 
-export default TrackingMap;
+export default createContainer(() => {
+  Meteor.subscribe("geopoints");
+
+  return {
+    geopoints: GeoPoints.find({}).fetch()
+  };
+}, TrackingMap);

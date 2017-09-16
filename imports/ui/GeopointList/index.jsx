@@ -1,6 +1,8 @@
 import React, { Component } from "react";
+import { createContainer } from "meteor/react-meteor-data";
 import PropTypes from "proptypes";
 
+import { GeoPoints } from "./../../api/geopoints";
 import { isBusAccount } from "./../../app/auth";
 
 class GeopointList extends Component {
@@ -39,4 +41,10 @@ GeopointList.prototypes = {
   geopoints: PropTypes.array
 };
 
-export default GeopointList;
+export default createContainer(() => {
+  Meteor.subscribe("geopoints");
+
+  return {
+    geopoints: GeoPoints.find({}).fetch()
+  };
+}, GeopointList);
