@@ -10,7 +10,6 @@ class TopNav extends Component {
       <AppBar
         title="WDAD"
         iconClassNameRight="muidocs-icon-navigation-expand-more"
-        iconElementRight={<AccountsUIWrapper />}
         onLeftIconButtonTouchTap={() => this.props.toggleSideNav()}
       />
     );
