@@ -29,6 +29,7 @@ class TrackingMap extends Component {
 
   componentDidMount() {
     this.initMap(this.state.startingLatLng);
+    this.drawMarkers(this.props.geopoints);
   }
 
   componentDidUpdate(prevProps, prevState) {
