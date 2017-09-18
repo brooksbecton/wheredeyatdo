@@ -19,7 +19,7 @@ class LoginModal extends Component {
         modal={true}
         open={this.props.open}
         onRequestClose={() => this.props.toggleLoginModal()}
-        title="Login"
+        title="Sign In/Out"
       >
         <AccountsUIWrapper />
       </Dialog>

@@ -15,6 +15,7 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
+      logged: Meteor.user(),
       loginModalOpen: false,
       sideNavOpen: false
     };
@@ -36,7 +37,11 @@ class App extends Component {
       <Router>
         <MuiThemeProvider>
           <div>
-            <TopNav toggleSideNav={this.toggleSideNav} />
+            <TopNav
+              logged={this.state.logged}
+              toggleLoginModal={this.toggleLoginModal}
+              toggleSideNav={this.toggleSideNav}
+            />
             <SideNav
               open={this.state.sideNavOpen}
               toggleSideNav={this.toggleSideNav}

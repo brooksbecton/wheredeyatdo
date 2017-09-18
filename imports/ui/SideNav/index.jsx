@@ -6,7 +6,7 @@ import RaisedButton from "material-ui/RaisedButton";
 
 import Anchor from "./../Anchor";
 
-const SideNav = ({ open, toggleLoginModal, toggleSideNav }) => {
+const SideNav = ({ open, toggleSideNav }) => {
   return (
     <div>
       <Drawer open={open} onClick={toggleSideNav}>
@@ -16,7 +16,6 @@ const SideNav = ({ open, toggleLoginModal, toggleSideNav }) => {
         <Anchor to="/geopoints">
           <MenuItem onClick={toggleSideNav}>Points List</MenuItem>
         </Anchor>
-        <MenuItem onClick={toggleLoginModal}>Login</MenuItem>
         <MenuItem onClick={toggleSideNav}>Close Nav</MenuItem>
       </Drawer>
     </div>

@@ -1,24 +1,60 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import AppBar from "material-ui/AppBar";
+import React from "react";
+import NavigationMenu from "material-ui/svg-icons/navigation/menu";
+import MenuItem from "material-ui/MenuItem";
+import Toggle from "material-ui/Toggle";
+import RaisedButton from "material-ui/RaisedButton";
 import styled from "styled-components";
+import {
+  Toolbar,
+  ToolbarGroup,
+  ToolbarSeparator,
+  ToolbarTitle
+} from "material-ui/Toolbar";
 
-import AccountsUIWrapper from "./../User/AccountsUIWrapper";
+import { isBusAccount } from "./../../app/auth";
 
-class TopNav extends Component {
+const Hamburger = styled(NavigationMenu)`vertical-align: middle;`;
+const VerticalAlign = { alignItems: "center", display: "flex" };
+
+export default class TopNav extends React.Component {
+  constructor(props) {
+    super(props);
+    this.renderBroadcastToggle = this.renderBroadcastToggle.bind(this);
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.logged != prevProps.logged) {
+      console.log("here");
+      this.renderBroadcastToggle();
+    }
+  }
+
+  renderBroadcastToggle() {
+    if (isBusAccount()) {
+      return (
+        <MenuItem style={VerticalAlign}>
+          <Toggle label="Broadcast" />
+        </MenuItem>
+      );
+    }
+  }
+
   render() {
     return (
-      <AppBar
-        title="WDAD"
-        iconClassNameRight="muidocs-icon-navigation-expand-more"
-        onLeftIconButtonTouchTap={() => this.props.toggleSideNav()}
-      />
+      <Toolbar>
+        <ToolbarGroup>
+          <MenuItem onClick={() => this.props.toggleSideNav()}>
+            <Hamburger />
+          </MenuItem>
+          <ToolbarSeparator />
+          {this.renderBroadcastToggle()}
+        </ToolbarGroup>
+        <ToolbarGroup>
+          <MenuItem onClick={() => this.props.toggleLoginModal()}>
+            Login
+          </MenuItem>
+        </ToolbarGroup>
+      </Toolbar>
     );
   }
 }
-
-TopNav.prototypes = {
-  toggleSideNav: PropTypes.func
-};
-
-export default TopNav;
