@@ -12,7 +12,15 @@ class TrackingMap extends Component {
   constructor() {
     super();
     const starkvilleLatLng = L.latLng(33.4504, -88.8184);
-    this.state = { points: [], startingLatLng: starkvilleLatLng };
+    this.state = {
+      gettingLocation: false,
+      points: [],
+      secondsElapsed: 0,
+      startingLatLng: starkvilleLatLng
+    };
+
+    // Ref to interval so it can be cleared later
+    this.interval = {};
 
     this.map = {};
     this.markerGroup = {};
@@ -21,27 +29,52 @@ class TrackingMap extends Component {
     this.addCircle = this.addCircle.bind(this);
     this.addMarker = this.addMarker.bind(this);
     this.drawMarkers = this.drawMarkers.bind(this);
+    this.getCurrentLocation = this.getCurrentLocation.bind(this);
     this.initMap = this.initMap.bind(this);
     this.printCoordOnClick = this.printCoordOnClick.bind(this);
     this.onLocationFound = this.onLocationFound.bind(this);
     this.onMapClick = this.onMapClick.bind(this);
+    this.tick = this.tick.bind(this);
+    this.toggleWatchLocation = this.toggleWatchLocation.bind(this);
   }
 
   componentDidMount() {
     this.initMap(this.state.startingLatLng);
     this.drawMarkers(this.props.geopoints);
+    this.interval = setInterval(this.tick, 1000);
   }
 
   componentDidUpdate(prevProps, prevState) {
+    // If it has been 5 seconds
+    if (
+      isBusAccount() &&
+      this.state.gettingLocation === false &&
+      this.state.secondsElapsed % 5 == 0
+    ) {
+      this.getCurrentLocation();
+    }
+
+    // Drawing new geopoints when availible
     if (this.props.geopoints != prevProps.geopoints) {
       this.drawMarkers(this.props.geopoints);
     }
+
+    if (this.props.broadcasting != prevProps.broadcasting) {
+      this.toggleWatchLocation(this.props.broadcasting);
+    }
   }
+
+  componentWillUnmount() {
+    //Stopping interval
+    clearInterval(this.interval);
+  }
+
   /**
    * Adds a circle to the map at latLng
    * @param {Object} latLng 
-   */
-  addCircle(latLng) {
+   */ addCircle(
+    latLng
+  ) {
     var circle = L.circle(latLng, {
       color: "red",
       fillColor: "#f03",
@@ -74,15 +107,22 @@ class TrackingMap extends Component {
   }
 
   /**
+   * Starts an async function to get a users current position
+   * The results of the find are heard by the function
+   * 'onLocationFound'
+   */
+  getCurrentLocation() {
+    this.setState({ gettingLocation: true });
+    this.map.locate({ setView: true, maxZoom: 12 });
+  }
+
+  /**
    * 
    * @param {Object} latLng 
    */
   initMap(latLng) {
     //Gets map reference
     this.map = L.map("mapid").setView(latLng, 13);
-
-    //Gets users current position
-    this.map.locate({ setView: true, maxZoom: 12 });
 
     //Gets marker group reference
     this.markerGroup = L.layerGroup().addTo(this.map);
@@ -109,15 +149,12 @@ class TrackingMap extends Component {
    * Adds marker to map when location is found
    * @param {Object<Event>} e 
    */
-  onLocationFound(e) {
-    const radius = e.accuracy / 2;
-
-    L.marker(e.latlng)
-      .addTo(this.map)
-      .bindPopup("You are within " + radius + " meters from this point")
-      .openPopup();
-
-    L.circle(e.latlng, radius).addTo(this.map);
+  onLocationFound({ latlng: latLng }) {
+    this.setState({ gettingLocation: false });
+    if (isBusAccount()) {
+      Meteor.call("geopoints.insert", latLng);
+    }
+    this.addMarker(latLng);
   }
 
   /**
@@ -142,12 +179,25 @@ class TrackingMap extends Component {
       .openOn(this.map);
   }
 
+  tick() {
+    this.setState({ secondsElapsed: this.state.secondsElapsed + 1 });
+  }
+
+  toggleWatchLocation(broadcasting) {
+    if (broadcasting) {
+      this.map.locate({ watch: true });
+    } else {
+      this.map.stopLocate();
+    }
+  }
+
   render() {
     return <div id="mapid" />;
   }
 }
 
 TrackingMap.prototypes = {
+  broadcasting: PropTypes.bool.isRequired,
   geopoints: PropTypes.array
 };
 

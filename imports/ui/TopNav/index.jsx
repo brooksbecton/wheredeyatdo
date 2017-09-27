@@ -1,8 +1,9 @@
-import React from "react";
-import NavigationMenu from "material-ui/svg-icons/navigation/menu";
 import MenuItem from "material-ui/MenuItem";
-import Toggle from "material-ui/Toggle";
+import PropTypes from "prop-types";
 import RaisedButton from "material-ui/RaisedButton";
+import NavigationMenu from "material-ui/svg-icons/navigation/menu";
+import Toggle from "material-ui/Toggle";
+import React from "react";
 import styled from "styled-components";
 import {
   Toolbar,
@@ -24,7 +25,6 @@ export default class TopNav extends React.Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (this.props.logged != prevProps.logged) {
-      console.log("here");
       this.renderBroadcastToggle();
     }
   }
@@ -33,7 +33,10 @@ export default class TopNav extends React.Component {
     if (isBusAccount()) {
       return (
         <MenuItem style={VerticalAlign}>
-          <Toggle label="Broadcast" />
+          <Toggle
+            onClick={() => this.props.toggleBroadcast()}
+            label="Broadcast"
+          />
         </MenuItem>
       );
     }
@@ -58,3 +61,9 @@ export default class TopNav extends React.Component {
     );
   }
 }
+
+TopNav.proptypes = {
+  toggleLoginModal: PropTypes.func.isRequired,
+  toggleSideNav: PropTypes.func.isRequired,
+  toggleBroadcast: PropTypes.func.isRequired
+};

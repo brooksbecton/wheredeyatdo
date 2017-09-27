@@ -15,21 +15,26 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
+      broadcasting: false,
       logged: Meteor.user(),
       loginModalOpen: false,
       sideNavOpen: false
     };
 
+    this.toggleBroadcast = this.toggleBroadcast.bind(this);
     this.toggleLoginModal = this.toggleLoginModal.bind(this);
     this.toggleSideNav = this.toggleSideNav.bind(this);
   }
-
-  toggleSideNav() {
-    this.setState({ sideNavOpen: !this.state.sideNavOpen });
+  toggleBroadcast() {
+    this.setState({ broadcasting: !this.state.broadcasting });
   }
 
   toggleLoginModal() {
     this.setState({ loginModalOpen: !this.state.loginModalOpen });
+  }
+
+  toggleSideNav() {
+    this.setState({ sideNavOpen: !this.state.sideNavOpen });
   }
 
   render() {
@@ -39,6 +44,7 @@ class App extends Component {
           <div>
             <TopNav
               logged={this.state.logged}
+              toggleBroadcast={this.toggleBroadcast}
               toggleLoginModal={this.toggleLoginModal}
               toggleSideNav={this.toggleSideNav}
             />
@@ -52,7 +58,13 @@ class App extends Component {
               toggleLoginModal={this.toggleLoginModal}
             />
             <Switch>
-              <Route exact path="/" component={TrackingMap} />
+              <Route
+                exact
+                path="/"
+                render={props => (
+                  <TrackingMap broadcasting={this.state.broadcasting} />
+                )}
+              />
               <Route exact path="/geopoints" component={GeopointList} />
             </Switch>
           </div>
