@@ -10,6 +10,7 @@ import SideNav from "./SideNav/index";
 import TopNav from "./TopNav/index";
 import TrackingMap from "./TrackingMap/index";
 import AccountsUIWrapper from "./User/AccountsUIWrapper";
+import LocationSnackBar from "./LocationSnackBar/index";
 
 class App extends Component {
   constructor() {
@@ -67,6 +68,7 @@ class App extends Component {
               />
               <Route exact path="/geopoints" component={GeopointList} />
             </Switch>
+            <LocationSnackBar />
           </div>
         </MuiThemeProvider>
       </Router>
