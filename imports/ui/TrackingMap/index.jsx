@@ -45,15 +45,6 @@ class TrackingMap extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    // If it has been 5 seconds
-    if (
-      isBusAccount() &&
-      this.state.gettingLocation === false &&
-      this.state.secondsElapsed % 5 == 0
-    ) {
-      this.getCurrentLocation();
-    }
-
     // Drawing new geopoints when availible
     if (this.props.geopoints != prevProps.geopoints) {
       this.drawMarkers(this.props.geopoints);
@@ -113,7 +104,7 @@ class TrackingMap extends Component {
    */
   getCurrentLocation() {
     this.setState({ gettingLocation: true });
-    this.map.locate({ setView: true, maxZoom: 12 });
+    this.map.locate();
   }
 
   /**
@@ -179,13 +170,16 @@ class TrackingMap extends Component {
       .openOn(this.map);
   }
 
+  /**
+   * Updates state of component with the number of seconds past
+   */
   tick() {
     this.setState({ secondsElapsed: this.state.secondsElapsed + 1 });
   }
 
   toggleWatchLocation(broadcasting) {
     if (broadcasting) {
-      this.map.locate({ watch: true });
+      this.map.locate({ watch: true, enableHighAccuracy: true });
     } else {
       this.map.stopLocate();
     }
