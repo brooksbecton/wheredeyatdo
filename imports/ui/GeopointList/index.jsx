@@ -1,3 +1,12 @@
+import {
+  Table,
+  TableBody,
+  TableHeader,
+  TableHeaderColumn,
+  TableRow,
+  TableRowColumn
+} from "material-ui/Table";
+import FlatButton from "material-ui/FlatButton";
 import { createContainer } from "meteor/react-meteor-data";
 import PropTypes from "proptypes";
 import React, { Component } from "react";
@@ -24,24 +33,34 @@ class GeopointList extends Component {
     if (this.props.geopoints.length > 0) {
       return (
         <div>
-          <button onClick={() => this.deleteGeoPoints(this.props.geopoints)}>
-            Delete All
-          </button>
-          <ol>
-            {this.props.geopoints.map(geopoint => {
-              return (
-                <li key={geopoint["_id"]}>
-                  {geopoint.lat + ", " + geopoint.lng}
-                  <button
-                    disabled={!isBusAccount()}
-                    onClick={() => this.deleteGeoPoints([geopoint])}
-                  >
-                    delete
-                  </button>
-                </li>
-              );
-            })}
-          </ol>
+          <Table>
+            <TableHeader adjustForCheckbox={false} displaySelectAll={false}>
+              <TableRow>
+                <TableHeaderColumn>X</TableHeaderColumn>
+                <TableHeaderColumn>Y</TableHeaderColumn>
+                <TableHeaderColumn>Delete</TableHeaderColumn>
+              </TableRow>
+            </TableHeader>
+            <TableBody displayRowCheckbox={false}>
+              {this.props.geopoints.map(geopoint => (
+                <TableRow key={geopoint["_id"]}>
+                  <TableRowColumn>{geopoint.lat}</TableRowColumn>
+                  <TableRowColumn>{geopoint.lng}</TableRowColumn>
+                  <TableRowColumn>
+                    <FlatButton
+                      label="X"
+                      disabled={!isBusAccount()}
+                      onClick={() => this.deleteGeoPoints([geopoint])}
+                    />
+                  </TableRowColumn>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+          <FlatButton
+            label="Delete All"
+            onClick={() => this.deleteGeoPoints(this.props.geopoints)}
+          />
         </div>
       );
     } else {
