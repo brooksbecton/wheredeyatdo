@@ -30,10 +30,10 @@ WDAD is currently a simple web site, but it would probably be better as a mobile
 
 ### Running the app
 
-* `npm i`
+* Install Dependencies (`npm i`)
 
-* `meteor --settings settings.json`
+* Start server with settings (`meteor --settings settings.json`)
 
-* Go To localhost:3000
+* Go To [localhost:3000](http://localhost:3000)
 
-*There is a default bus account. email:`bus@bus.bus`  pass`bus`*
+There will be an admin and bus account made with your email and pass defined in `settings.json`
