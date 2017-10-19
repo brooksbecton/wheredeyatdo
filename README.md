@@ -4,17 +4,36 @@ An app that lets you know where someone is at. Some users will be able to post p
 
 ## Why
 
-Some public transportation use outdated and inaccurate location software. This is an attempt to provide a simple solution to keeping up where public transport currently is. 
+Some public transportation use outdated and inaccurate location software. This is an attempt to provide a simple solution to keeping up where public transport currently is.
 
 ## Future
 
-WDAD is currently a simple web site, but it would probably be better as a mobile app. Also using a phones native geolocation is probably going to be more accurate. 
+WDAD is currently a simple web site, but it would probably be better as a mobile app. Also using a phones native geolocation is probably going to be more accurate.
 
-## Running the app
+## Setup
 
-1.`npm i`
-2.`meteor`
-3. Go To localhost:3000
-4. Create an account with name `bus1`
+  1. Create `settings.json` in root like:
+  ```json
+    {
+        "admin": {
+            "email": "admin@admin.admin",
+            "pass": "admin",
+            "name": "admin"
+        },
+        "bus": {
+            "email": "bus@bus.bus",
+            "pass": "bus",
+            "name": "bus"
+        }
+    }
+  ```
 
-*`bus1` can CRUD points, but normal accounts can only view*
+### Running the app
+
+* `npm i`
+
+* `meteor --settings settings.json`
+
+* Go To localhost:3000
+
+*There is a default bus account. email:`bus@bus.bus`  pass`bus`*

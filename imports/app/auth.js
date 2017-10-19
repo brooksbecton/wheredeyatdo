@@ -1,13 +1,7 @@
-export function isBusAccount() {
-  if (Meteor.user()) {
-    if (
-      Meteor.user().username == "bus1" ||
-      Meteor.user().username == "bus2" ||
-      Meteor.user().username == "bus3"
-    ) {
-      return true;
-    }
-  } else {
-    return false;
-  }
-}
+import { roles } from "./roles";
+
+export const isAdmin = () =>
+  Roles.userIsInRole(Meteor.user(), [roles.administrator]);
+
+export const isBusAccount = () =>
+  Roles.userIsInRole(Meteor.user(), [roles.administrator, roles.busDriver]);
